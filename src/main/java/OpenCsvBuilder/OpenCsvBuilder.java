@@ -1,12 +1,9 @@
 package OpenCsvBuilder;
 
 import censusanalyser.CSVBuilderException;
-import censusanalyser.CensusAnalyserException;
 import censusanalyser.ICSVBuilder;
-import censusanalyser.IndiaCensusCSV;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvBadConverterException;
 
 import java.io.Reader;
 import java.util.Iterator;
@@ -16,7 +13,7 @@ public class OpenCsvBuilder<E> implements ICSVBuilder {
     @Override
     public Iterator<E> getCsvFileIterator(Reader reader, Class csvClass) throws CSVBuilderException {
         try {
-            return this.getCSVBean(reader,csvClass).iterator();
+            return this.getCSVBean(reader, csvClass).iterator();
         } catch (IllegalStateException e) {
             throw new CSVBuilderException(e.getMessage(), CSVBuilderException.ExceptionType.UNABLE_TO_PARSE);
         }
@@ -24,12 +21,10 @@ public class OpenCsvBuilder<E> implements ICSVBuilder {
 
     @Override
     public List getCsvFileList(Reader reader, Class csvClass) throws CSVBuilderException {
-        return this.getCSVBean(reader,csvClass).parse();
-
+        return this.getCSVBean(reader, csvClass).parse();
     }
 
     private CsvToBean getCSVBean(Reader reader, Class csvClass) throws CSVBuilderException {
-
         try {
             CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
             csvToBeanBuilder.withType(csvClass);
@@ -39,6 +34,5 @@ public class OpenCsvBuilder<E> implements ICSVBuilder {
         } catch (IllegalStateException e) {
             throw new CSVBuilderException(e.getMessage(), CSVBuilderException.ExceptionType.UNABLE_TO_PARSE);
         }
-
     }
 }
