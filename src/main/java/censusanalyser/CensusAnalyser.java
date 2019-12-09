@@ -13,13 +13,12 @@ import java.util.stream.StreamSupport;
 
 public class CensusAnalyser {
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
-
-
         /* JAVA 8 FEATURES ALLOW YOU IF YOU WANT TO USE ANY IO STREAM WITHIN TRY BLOCK, DECLARE IT IN TRY PARAMETER BLOCK SO THAT
          * IT WILL AUTOMATICALLY CLOSE IT AFTER ENDING ITS TRY BLOCK*/
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
         ) {
-            Iterator<IndiaCensusCSV> IndiaCensusIterator = new OpenCsvBuilder().getCsvFileIterator(reader, IndiaCensusCSV.class);
+            ICSVBuilder csvbuilder = CSVBuilderFactory.createCsvbuilder();
+            Iterator<IndiaCensusCSV> IndiaCensusIterator = csvbuilder.getCsvFileIterator(reader, IndiaCensusCSV.class);
             return getCount(IndiaCensusIterator);
 
         } catch (IOException e) {
@@ -31,7 +30,8 @@ public class CensusAnalyser {
     public int loadIndiaStateCode(String stateCodeCsv) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(stateCodeCsv));
         ) {
-            Iterator<IndiaStateCode> IndiaStateCodeIterator = new OpenCsvBuilder().getCsvFileIterator(reader, IndiaStateCode.class);
+            ICSVBuilder csvbuilder = CSVBuilderFactory.createCsvbuilder();
+            Iterator<IndiaStateCode> IndiaStateCodeIterator = csvbuilder.getCsvFileIterator(reader, IndiaStateCode.class);
             return this.getCount(IndiaStateCodeIterator);
 
         } catch (IOException e) {
