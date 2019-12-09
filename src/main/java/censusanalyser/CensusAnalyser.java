@@ -6,13 +6,18 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyser {
-    List<IndiaCensusCSV> indiaCensusList = null;
+    List<IndiaCensusDAO> censusList = null;
+
+    public CensusAnalyser() {
+        this.censusList = new ArrayList<IndiaCensusDAO>();
+    }
 
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
         /* JAVA 8 FEATURES ALLOW YOU IF YOU WANT TO USE ANY IO STREAM WITHIN TRY BLOCK, DECLARE IT IN TRY PARAMETER BLOCK SO THAT
@@ -20,8 +25,11 @@ public class CensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
         ) {
             ICSVBuilder csvbuilder = CSVBuilderFactory.createCsvbuilder();
-            indiaCensusList = csvbuilder.getCsvFileList(reader, IndiaCensusCSV.class);
-            return indiaCensusList.size();
+            Iterator<IndiaCensusCSV> csvfileiterator = csvbuilder.getCsvFileIterator(reader, IndiaCensusCSV.class);
+            while(csvfileiterator.hasNext()){
+                this.censusList.add(new IndiaCensusDAO(csvfileiterator.next()));
+            }
+            return censusList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -48,20 +56,16 @@ public class CensusAnalyser {
     public String getStateWithSortedData(String csvFilePath) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
         ) {
-            ICSVBuilder csvbuilder = CSVBuilderFactory.createCsvbuilder();
-            indiaCensusList = csvbuilder.getCsvFileList(reader, IndiaCensusCSV.class);
-            if (indiaCensusList ==null | indiaCensusList.size()==0){
+            if (censusList ==null | censusList.size()==0){
                 throw new CensusAnalyserException("Null file",CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
             }
-            Comparator<IndiaCensusCSV> censusCSVComparator = Comparator.comparing(census -> census.state);
+            Comparator<IndiaCensusDAO> censusCSVComparator = Comparator.comparing(census -> census.state);
             this.sort(censusCSVComparator);
-            String sortedData = new Gson().toJson(indiaCensusList);
+            String sortedData = new Gson().toJson(this.censusList);
             return sortedData;
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-        } catch (CSVBuilderException e) {
-            throw new CensusAnalyserException(e.getMessage(), e.type.name());
         }
     }
 
@@ -71,14 +75,14 @@ public class CensusAnalyser {
         return numOfEntries;
     }
 
-    private void sort( Comparator<IndiaCensusCSV> censusCSVComparator) {
-        for (int i = 0; i < indiaCensusList.size() - 1; i++){
-            for (int j = 0; j < indiaCensusList.size() - i - 1; j++) {
-                IndiaCensusCSV censusCSV1 = indiaCensusList.get(j);
-                IndiaCensusCSV censusCSV2 = indiaCensusList.get(j + 1);
+    private void sort( Comparator<IndiaCensusDAO> censusCSVComparator) {
+        for (int i = 0; i < censusList.size() - 1; i++){
+            for (int j = 0; j < censusList.size() - i - 1; j++) {
+                IndiaCensusDAO censusCSV1 = censusList.get(j);
+                IndiaCensusDAO censusCSV2 = censusList.get(j + 1);
                 if (censusCSVComparator.compare(censusCSV1, censusCSV2) > 0) {
-                    indiaCensusList.set(j, censusCSV2);
-                    indiaCensusList.set(j + 1, censusCSV1);
+                    censusList.set(j, censusCSV2);
+                    censusList.set(j + 1, censusCSV1);
                 }
             }
         }
