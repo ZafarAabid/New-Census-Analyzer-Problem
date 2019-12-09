@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyser {
@@ -18,12 +19,15 @@ public class CensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
         ) {
             ICSVBuilder csvbuilder = CSVBuilderFactory.createCsvbuilder();
-            Iterator<IndiaCensusCSV> IndiaCensusIterator = csvbuilder.getCsvFileIterator(reader, IndiaCensusCSV.class);
-            return getCount(IndiaCensusIterator);
+
+            List<IndiaCensusCSV> IndiaCensusList = csvbuilder.getCsvFileList(reader, IndiaCensusCSV.class);
+            return IndiaCensusList.size();
 
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (CSVBuilderException e) {
+            throw new CensusAnalyserException(e.getMessage(),e.type.name());
         }
     }
 
@@ -34,9 +38,11 @@ public class CensusAnalyser {
             Iterator<IndiaStateCode> IndiaStateCodeIterator = csvbuilder.getCsvFileIterator(reader, IndiaStateCode.class);
             return this.getCount(IndiaStateCodeIterator);
 
-        } catch (IOException e) {
+        } catch (IOException  e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (CSVBuilderException e) {
+            throw new CensusAnalyserException(e.getMessage(),e.type.name());
         }
     }
 
