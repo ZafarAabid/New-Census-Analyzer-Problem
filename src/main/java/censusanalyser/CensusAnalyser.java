@@ -1,11 +1,14 @@
 package censusanalyser;
 
+import OpenCsvBuilder.OpenCsvBuilder;
 import com.google.gson.Gson;
 
+import javax.xml.datatype.DatatypeConstants;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -53,13 +56,28 @@ public class CensusAnalyser {
         }
     }
 
-    public String getStateWithSortedData(String csvFilePath) throws CensusAnalyserException {
+    public int loadIndiaStateCodeByCommonCsv(String stateCodeCsv) throws CensusAnalyserException {
+        try (Reader reader = Files.newBufferedReader(Paths.get(stateCodeCsv));
+        ) {
+            Iterator<IndiaStateCode> IndiaStateCodeIterator = OpenCsvBuilder.getCsvBean(reader, IndiaStateCode.class);
+            return this.getCount(IndiaStateCodeIterator);
+
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (CSVBuilderException e) {
+            throw new CensusAnalyserException(e.getMessage(), e.type.name());
+        }
+    }
+
+
+    public String getStateWithSortByParameter(String csvFilePath,String parameter) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
         ) {
             if (censusList ==null | censusList.size()==0){
                 throw new CensusAnalyserException("Null file",CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
             }
-            Comparator<IndiaCensusDAO> censusCSVComparator = Comparator.comparing(census -> census.state);
+            Comparator<IndiaCensusDAO> censusCSVComparator =getSortingField(parameter);
             this.sort(censusCSVComparator);
             String sortedData = new Gson().toJson(this.censusList);
             return sortedData;
@@ -67,6 +85,28 @@ public class CensusAnalyser {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
+    }
+
+    private Comparator getSortingField(String parameter) throws CensusAnalyserException {
+        parameter=parameter.toLowerCase();
+        Comparator<IndiaCensusDAO> censusDAOComparator = null;
+        switch (parameter){
+            case "state":
+                censusDAOComparator = Comparator.comparing(census -> census.state);
+                break;
+            case "population":
+                censusDAOComparator = Comparator.comparing(census -> census.population);
+                break;
+            case "area":
+                censusDAOComparator = Comparator.comparing(census -> census.areaInSqKm);
+                break;
+            case "density":
+                censusDAOComparator = Comparator.comparing(census -> census.densityPerSqKm);
+                break;
+            default:
+                throw new CensusAnalyserException("improper Field Name",CensusAnalyserException.ExceptionType.IMPROPER_PARAMETER_TYPE_ERROR);
+    }
+        return censusDAOComparator;
     }
 
     private <E> int getCount(Iterator iterator) {

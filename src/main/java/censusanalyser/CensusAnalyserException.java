@@ -8,7 +8,7 @@ public class CensusAnalyserException extends Exception {
     }
 
     enum ExceptionType {
-        CENSUS_FILE_PROBLEM, UNABLE_TO_PARSE;
+        CENSUS_FILE_PROBLEM, UNABLE_TO_PARSE,IMPROPER_PARAMETER_TYPE_ERROR;
     }
 
     ExceptionType type;
@@ -18,7 +18,7 @@ public class CensusAnalyserException extends Exception {
         this.type = type;
     }
 
-    public CensusAnalyserException(String message, ExceptionType type, Throwable cause) {
+    public CensusAnalyserException(ExceptionType type,String message,Throwable cause) {
         super(message, cause);
         this.type = type;
     }
