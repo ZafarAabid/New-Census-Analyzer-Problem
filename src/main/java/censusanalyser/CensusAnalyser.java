@@ -19,7 +19,7 @@ public class CensusAnalyser {
     Map<String,IndiaCensusDAO> censusMap = null;
 
     public CensusAnalyser() {
-        this.censusMap = new HashMap<String,IndiaCensusDAO>();
+        this.censusMap = new HashMap<>();
     }
 
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
@@ -74,9 +74,9 @@ public class CensusAnalyser {
                 throw new CensusAnalyserException("Null file", CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
             }
 
-            Comparator<IndiaCensusDAO> censusCSVComparator = Comparator.comparing(census -> census.state);
+            Comparator<IndiaCensusDAO> censusCSVComparator = getSortingField(parameter);
             List<IndiaCensusDAO> censusDAOS = censusMap.values().stream().collect(Collectors.toList());
-             censusDAOS = this.sort(censusDAOS,censusCSVComparator);
+             censusDAOS = sort(censusDAOS,censusCSVComparator);
             String sortedData = new Gson().toJson(censusDAOS);
             return sortedData;
         } catch (IOException e) {
@@ -116,8 +116,8 @@ public class CensusAnalyser {
     private List sort(List<IndiaCensusDAO> censusDAOS,Comparator<IndiaCensusDAO> censusCSVComparator) {
         for (int i = 0; i < censusDAOS.size() - 1; i++) {
             for (int j = 0; j < censusDAOS.size() - i - 1; j++) {
-                IndiaCensusDAO censusCSV1 = censusMap.get(j);
-                IndiaCensusDAO censusCSV2 = censusMap.get(j + 1);
+                IndiaCensusDAO censusCSV1 = censusDAOS.get(j);
+                IndiaCensusDAO censusCSV2 = censusDAOS.get(j + 1);
                 if (censusCSVComparator.compare(censusCSV1, censusCSV2) > 0) {
                     censusDAOS.set(j, censusCSV2);
                     censusDAOS.set(j + 1, censusCSV1);
