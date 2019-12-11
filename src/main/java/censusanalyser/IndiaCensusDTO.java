@@ -7,11 +7,11 @@ public class IndiaCensusDTO {
     public long areaInSqKm;
     public String state;
 
-    public IndiaCensusDTO(IndiaCensusDAO indiaCensusCSV) {
-        state = indiaCensusCSV.state;
-        areaInSqKm = indiaCensusCSV.areaInSqKm;
-        densityPerSqKm = indiaCensusCSV.densityPerSqKm;
-        population = indiaCensusCSV.population;
+    public IndiaCensusDTO(IndiaCensusDAO indiaCensusDAO) {
+        state = indiaCensusDAO.state;
+        areaInSqKm = indiaCensusDAO.areaInSqKm;
+        densityPerSqKm = indiaCensusDAO.densityPerSqKm;
+        population = indiaCensusDAO.population;
     }
 
 }

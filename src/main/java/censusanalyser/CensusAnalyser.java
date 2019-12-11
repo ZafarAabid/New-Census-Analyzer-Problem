@@ -1,6 +1,9 @@
 package censusanalyser;
 
-import OpenCsvBuilder.OpenCsvBuilder;
+import com.csvBuilder.CSVBuilderException;
+import com.csvBuilder.CSVBuilderFactory;
+import com.csvBuilder.ICSVBuilder;
+import com.csvBuilder.OpenCsvBuilder;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -39,7 +42,7 @@ public class CensusAnalyser {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         } catch (CSVBuilderException e) {
-            throw new CensusAnalyserException(e.getMessage(), e.type.name());
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
         }
     }
 
@@ -54,24 +57,9 @@ public class CensusAnalyser {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         } catch (CSVBuilderException e) {
-            throw new CensusAnalyserException(e.getMessage(), e.type.name());
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
         }
     }
-
-    public int loadIndiaStateCodeByCommonCsv(String stateCodeCsv) throws CensusAnalyserException {
-        try (Reader reader = Files.newBufferedReader(Paths.get(stateCodeCsv));
-        ) {
-            Iterator<IndiaStateCodeDAO> IndiaStateCodeIterator = OpenCsvBuilder.getCsvBean(reader, IndiaStateCodeDAO.class);
-            return this.getCount(IndiaStateCodeIterator);
-
-        } catch (IOException e) {
-            throw new CensusAnalyserException(e.getMessage(),
-                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-        } catch (CSVBuilderException e) {
-            throw new CensusAnalyserException(e.getMessage(), e.type.name());
-        }
-    }
-
 
     public String getStateWithSortByParameter(String csvFilePath, String parameter) throws CensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
