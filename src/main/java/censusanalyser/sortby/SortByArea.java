@@ -8,6 +8,6 @@ public class SortByArea implements ISortBy {
 
     @Override
     public Comparator getComparator() {
-        return Comparator.<IndiaCensusDAO,Long>comparing(census -> census.areaInSqKm);
+        return Comparator.<IndiaCensusDAO,Long>comparing(census -> census.areaInSqKm,Comparator.reverseOrder());
     }
 }

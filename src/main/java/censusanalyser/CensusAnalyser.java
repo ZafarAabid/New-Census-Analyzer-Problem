@@ -1,6 +1,7 @@
 package censusanalyser;
 
 import censusanalyser.sortby.ISortBy;
+import censusanalyser.sortby.SortByArea;
 import com.csvBuilder.CSVBuilderException;
 import com.csvBuilder.CSVBuilderFactory;
 import com.csvBuilder.ICSVBuilder;
@@ -76,33 +77,17 @@ public class CensusAnalyser {
         String sortedData = new Gson().toJson(censusDAOS);
         return sortedData;
     }
-
-/*    private Comparator getSortingField(String parameter) throws CensusAnalyserException {
-
-
-        parameter = parameter.toLowerCase();
-
-
-        Comparator<IndiaCensusDAO> censusDAOComparator = null;
-        switch (parameter) {
-            case "state":
-                censusDAOComparator = Comparator.comparing(census -> census.state);
-                break;
-            case "population":
-                censusDAOComparator = Comparator.comparing(census -> census.population);
-                break;
-            case "area":
-                censusDAOComparator = Comparator.comparing(census -> census.areaInSqKm);
-                break;
-            case "density":
-                censusDAOComparator = Comparator.comparing(census -> census.densityPerSqKm);
-                break;
-            default:
-                throw new CensusAnalyserException("improper Field Name", CensusAnalyserException.ExceptionType.IMPROPER_PARAMETER_TYPE_ERROR);
+    public String getStateWithSortByParameter(ISortBy iSortBy) throws CensusAnalyserException {
+        if (censusMap == null | censusMap.size() == 0) {
+            throw new CensusAnalyserException("Null file", CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
-    }
-    */
 
+        Comparator<IndiaCensusDAO> censusCSVComparator = iSortBy.getComparator();
+        List<IndiaCensusDAO> censusDAOS = censusMap.values().stream().collect(Collectors.toList());
+        censusDAOS = sort(censusDAOS, censusCSVComparator);
+        String sortedData = new Gson().toJson(censusDAOS);
+        return sortedData;
+    }
 
     private List sort(List<IndiaCensusDAO> censusDAOS, Comparator<IndiaCensusDAO> censusCSVComparator) {
         for (int i = 0; i < censusDAOS.size() - 1; i++) {

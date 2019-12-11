@@ -8,6 +8,6 @@ public class SortByState implements ISortBy {
 
     @Override
     public Comparator getComparator() {
-        return Comparator.<IndiaCensusDAO, String>comparing(census -> census.state);
+        return Comparator.<IndiaCensusDAO, String>comparing(census -> census.state,Comparator.reverseOrder());
     }
 }

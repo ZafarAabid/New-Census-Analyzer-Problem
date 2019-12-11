@@ -8,6 +8,6 @@ public class SortByDensity implements ISortBy {
 
     @Override
     public Comparator getComparator() {
-        return Comparator.<IndiaCensusDAO,Double>comparing(census -> census.densityPerSqKm);
+        return Comparator.<IndiaCensusDAO,Double>comparing(census -> census.densityPerSqKm,Comparator.reverseOrder());
     }
 }
