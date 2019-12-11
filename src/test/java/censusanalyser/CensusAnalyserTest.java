@@ -129,6 +129,21 @@ public class CensusAnalyserTest {
         }
     }
 
+    @Test
+    public void givenData_whenReverseSortedByAreaUsingInterface_ShouldReturnSortedoutput() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+            censusAnalyser.loadIndiaStateCode(STATE_CODE_CSV);
+            ISortBy iSortBy = new SortByState();
+            String sortedCensusData = censusAnalyser.getStateWithSortByParameter(iSortBy);
+            IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
+            Assert.assertEquals("Andhra Pradesh", CsvDataList[CsvDataList.length - 1].state);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        }
+    }
+
 
 
 
