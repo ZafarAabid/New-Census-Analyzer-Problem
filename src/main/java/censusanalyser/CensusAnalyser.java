@@ -7,21 +7,26 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CensusAnalyser {
+
+    enum Country {INDIA, US}
+
     Map<String, CensusDAO> censusMap = null;
 
     public CensusAnalyser() {
         this.censusMap = new HashMap<>();
     }
 
-    public Map loadIndiaCensusData(String... filePath) throws CensusAnalyserException {
-        censusMap = new CensusLoader().loadCensusData(IndiaCensusDTO.class,filePath );
+    public Map loadCensusData(CensusAnalyser.Country country, String... filePath) throws CensusAnalyserException {
+        if (country.equals(Country.INDIA))
+            censusMap = new CensusLoader().loadCensusData(IndiaCensusDTO.class, filePath);
+
+        else if (country.equals(Country.INDIA))
+            censusMap = new CensusLoader().loadCensusData(IndiaCensusDTO.class, filePath);
+        else
+            throw new CensusAnalyserException("wrong country name is passed", CensusAnalyserException.ExceptionType.INVALID_COUNTRY);
         return censusMap;
     }
 
-    public Map loadUSCensusData(String... filePath) throws CensusAnalyserException {
-        censusMap = new CensusLoader().loadCensusData(USCensusCodeDAO.class,filePath);
-        return censusMap;
-    }
 
     public String getStateWithSortByParameter(SortParameter.Parameter parameter) throws CensusAnalyserException {
         if (censusMap == null | censusMap.size() == 0) {
