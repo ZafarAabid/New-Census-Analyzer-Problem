@@ -15,6 +15,7 @@ public class CensusAnalyserTest {
     private static final String INDIA_CENSUS_CSV_FILE_PATH_WITH_NULL_VALUE = "/home/user/workspace/newCode/src/test/resources/IndiaStateCensusData_NullFile.csv";
     private static final String WRONG_CSV_FILE_PATH = "./src/main/resources/IndiaStateCensusData.csv";
     private static final String STATE_CODE_CSV = "/home/user/workspace/newCode/src/test/resources/IndiaStateCode.csv";
+    private static final String US_STATE_CODE_CSV = "/home/user/workspace/newCode/src/test/resources/USCensusData.csv";
 
     @Test
     public void givenIndianCensusCSVFileReturnsCorrectRecords() {
@@ -82,7 +83,7 @@ public class CensusAnalyserTest {
             ISortBy sortBy = new SortByState();
 
             String sortedCensusData = censusAnalyser.getStateWithSortByParameter(SortParameter.Parameter.STATE);
-            IndiaCensusDAO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
+            CensusDAO[] CsvDataList = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
             Assert.assertEquals("Andhra Pradesh", CsvDataList[0].state);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -96,7 +97,7 @@ public class CensusAnalyserTest {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
             String sortedCensusData = censusAnalyser.getStateWithSortByParameter(SortParameter.Parameter.POPULATION);
-            IndiaCensusDAO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
+            CensusDAO[] CsvDataList = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
             Assert.assertEquals("Uttar Pradesh", CsvDataList[28].state);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -145,8 +146,14 @@ public class CensusAnalyserTest {
         }
     }
 
+    @Test
+    public void givenData_WhenReadUSCensusData_ShouldReturnOutput() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            int USCensusDataCount = censusAnalyser.loadUSCensusData(US_STATE_CODE_CSV);
+            Assert.assertEquals(51, USCensusDataCount);
+        }catch (CensusAnalyserException e){
 
-
-
-
+        }
+    }
 }
