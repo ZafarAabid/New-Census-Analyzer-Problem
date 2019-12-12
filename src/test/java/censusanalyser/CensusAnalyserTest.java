@@ -1,6 +1,7 @@
 package censusanalyser;
 
 import censusanalyser.sortby.ISortBy;
+import censusanalyser.sortby.SortByArea;
 import censusanalyser.sortby.SortByState;
 import com.google.gson.Gson;
 import org.junit.Assert;
@@ -135,10 +136,10 @@ public class CensusAnalyserTest {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
             censusAnalyser.loadIndiaStateCode(STATE_CODE_CSV);
-            ISortBy iSortBy = new SortByState();
+            ISortBy iSortBy = new SortByArea();
             String sortedCensusData = censusAnalyser.getStateWithSortByParameter(iSortBy);
             IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
-            Assert.assertEquals("Andhra Pradesh", CsvDataList[CsvDataList.length - 1].state);
+            Assert.assertEquals("Rajasthan", CsvDataList[0].state);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
