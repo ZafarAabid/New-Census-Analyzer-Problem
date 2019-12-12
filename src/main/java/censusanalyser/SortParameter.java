@@ -12,12 +12,12 @@ public class SortParameter {
     static Map<SortParameter.Parameter, Comparator> sortParameterComparator = new HashMap<>();
     public static Comparator getParameter(SortParameter.Parameter parameter) {
 
-        sortParameterComparator.put(Parameter.STATE, Comparator.<IndiaCensusDAO,String>comparing(census -> census.state));
-        sortParameterComparator.put(Parameter.POPULATION, Comparator.<IndiaCensusDAO,Long>comparing(census -> census.population));
-        sortParameterComparator.put(Parameter.AREA, Comparator.<IndiaCensusDAO,Long>comparing(census -> census.areaInSqKm));
-        sortParameterComparator.put(Parameter.DENSITY, Comparator.<IndiaCensusDAO,Double>comparing(census -> census.densityPerSqKm));
+        sortParameterComparator.put(Parameter.STATE, Comparator.<CensusDAO,String>comparing(census -> census.state));
+        sortParameterComparator.put(Parameter.POPULATION, Comparator.<CensusDAO,Long>comparing(census -> census.population));
+        sortParameterComparator.put(Parameter.AREA, Comparator.<CensusDAO,Double>comparing(census -> census.totalArea));
+        sortParameterComparator.put(Parameter.DENSITY, Comparator.<CensusDAO,Double>comparing(census -> census.populationDensity));
 
-        Comparator<IndiaCensusDAO> comparator = sortParameterComparator.get(parameter);
+        Comparator<CensusDAO> comparator = sortParameterComparator.get(parameter);
         return comparator;
     }
 

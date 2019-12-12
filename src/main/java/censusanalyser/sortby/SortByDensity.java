@@ -1,6 +1,6 @@
 package censusanalyser.sortby;
 
-import censusanalyser.IndiaCensusDAO;
+import censusanalyser.CensusDAO;
 
 import java.util.Comparator;
 
@@ -8,6 +8,6 @@ public class SortByDensity implements ISortBy {
 
     @Override
     public Comparator getComparator() {
-        return Comparator.<IndiaCensusDAO,Double>comparing(census -> census.densityPerSqKm,Comparator.reverseOrder());
+        return Comparator.<CensusDAO,Double>comparing(census -> census.populationDensity,Comparator.reverseOrder());
     }
 }

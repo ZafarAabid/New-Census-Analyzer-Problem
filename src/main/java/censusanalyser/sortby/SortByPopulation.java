@@ -1,6 +1,6 @@
 package censusanalyser.sortby;
 
-import censusanalyser.IndiaCensusDAO;
+import censusanalyser.CensusDAO;
 
 import java.util.Comparator;
 
@@ -8,6 +8,6 @@ public class SortByPopulation implements ISortBy {
 
     @Override
     public Comparator getComparator() {
-        return Comparator.<IndiaCensusDAO,Long>comparing(census -> census.population,Comparator.reverseOrder());
+        return Comparator.<CensusDAO,Long>comparing(census -> census.population,Comparator.reverseOrder());
     }
 }
