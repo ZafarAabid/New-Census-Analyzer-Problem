@@ -155,4 +155,14 @@ public class CensusAnalyserTest {
 
         }
     }
+    @Test
+    public void givenData_WhenReadIndianCensusDataUsingAdapter_ShouldReturnOutput() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            Map indiaCensusData = censusAnalyser.loadCensusData(CensusAnalyser.Country.US,US_STATE_CODE_CSV);
+            Assert.assertEquals(51, indiaCensusData.size());
+        }catch (CensusAnalyserException e){
+
+        }
+    }
 }
