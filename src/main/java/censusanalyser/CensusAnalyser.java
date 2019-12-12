@@ -51,12 +51,10 @@ public class CensusAnalyser {
         ) {
             ICSVBuilder csvbuilder = CSVBuilderFactory.createCsvbuilder();
             Iterator<IndiaStateCodeDAO> IndiaStateCodeIterator = csvbuilder.getCsvFileIterator(reader, IndiaStateCodeDAO.class);
-            while (IndiaStateCodeIterator.hasNext()) {
-                IndiaStateCodeDAO stateCodeDAO = IndiaStateCodeIterator.next();
-                IndiaCensusDAO censusDAO = censusMap.get(stateCodeDAO.state);
-                if (censusDAO == null) continue;
-                censusDAO.stateCode = stateCodeDAO.stateCode;
-            }
+            Iterable<IndiaStateCodeDAO> csvIterable = () -> IndiaStateCodeIterator;
+            StreamSupport.stream(csvIterable.spliterator(), false)
+                    .filter(csvState -> censusMap.get(csvState.state) != null)
+                    .forEach(csvState -> censusMap.get(csvState.state).stateCode = csvState.stateCode);
             return censusMap.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
@@ -77,6 +75,7 @@ public class CensusAnalyser {
         String sortedData = new Gson().toJson(censusDAOS);
         return sortedData;
     }
+
     public String getStateWithSortByParameter(ISortBy iSortBy) throws CensusAnalyserException {
         if (censusMap == null | censusMap.size() == 0) {
             throw new CensusAnalyserException("Null file", CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
