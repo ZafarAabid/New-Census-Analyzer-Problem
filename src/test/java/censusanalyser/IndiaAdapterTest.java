@@ -1,3 +1,5 @@
+package censusanalyser;
+
 import censusanalyser.*;
 import censusanalyser.sortby.ISortBy;
 import censusanalyser.sortby.SortByArea;

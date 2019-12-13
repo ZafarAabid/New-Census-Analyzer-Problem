@@ -1,8 +1,7 @@
+package censusanalyser;
+
 import censusanalyser.*;
-import censusanalyser.sortby.ISortBy;
-import censusanalyser.sortby.SortByArea;
-import censusanalyser.sortby.SortByState;
-import censusanalyser.sortby.SortParameter;
+import censusanalyser.sortby.*;
 import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
@@ -64,13 +63,13 @@ public class USAdapterTest {
     @Test
     public void givenData_whenSortByName_ShouldReturnSortedoutput() {
         try {
-            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            CensusAnalyser censusAnalyser = new CensusAnalyser(CensusAnalyser.Country.US);
             censusAnalyser.loadCensusData(CvsLoaderFactory.Country.US,US_STATE_CODE_CSV);
             ISortBy sortBy = new SortByState();
 
             String sortedCensusData = censusAnalyser.getStateWithSortByParameter(SortParameter.Parameter.STATE);
             CensusDAO[] CsvDataList = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
-            Assert.assertEquals("Andhra Pradesh", CsvDataList[0].state);
+            Assert.assertEquals("Alabama", CsvDataList[0].state);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
@@ -79,15 +78,30 @@ public class USAdapterTest {
     @Test
     public void givenData_whenReverseSortedByAreaUsingInterface_ShouldReturnSortedoutput() {
         try {
-            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            CensusAnalyser censusAnalyser = new CensusAnalyser(CensusAnalyser.Country.US);
             censusAnalyser.loadCensusData(CvsLoaderFactory.Country.US,US_STATE_CODE_CSV);
             ISortBy iSortBy = new SortByArea();
             String sortedCensusData = censusAnalyser.getStateWithSortByParameter(iSortBy);
             IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
-            Assert.assertEquals("Rajasthan", CsvDataList[0].state);
+            System.out.println(CsvDataList[0].state);
+            Assert.assertEquals("Alaska",CsvDataList[0].state);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
     }
+    @Test
+    public void givenData_whenReverseSortedByDensityUsingInterface_ShouldReturnSortedoutput() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser(CensusAnalyser.Country.US);
+            censusAnalyser.loadCensusData(CvsLoaderFactory.Country.US,US_STATE_CODE_CSV);
+            ISortBy iSortBy = new SortByDensity();
+            String sortedCensusData = censusAnalyser.getStateWithSortByParameter(iSortBy);
+            IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
+            Assert.assertEquals("District of Columbia",CsvDataList[0].state);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        }
+    }
+
 
 }
