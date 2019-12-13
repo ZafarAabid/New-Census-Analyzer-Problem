@@ -30,7 +30,7 @@ public class IndiaCensusAdaptor extends CensusAdaptor {
         return censusMap;
     }*/
     @Override
-    public Map<String, CensusDAO> loadCensusData(CensusAnalyser.Country country, String... filepath) {
+    public Map<String, CensusDAO> loadCensusData(String... filepath) {
         return null;
     }
 

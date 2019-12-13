@@ -14,8 +14,9 @@ public class CensusAnalyser {
         this.censusMap = new HashMap<>();
     }
 
-    public Map loadCensusData(CensusAnalyser.Country country, String... filePath) throws CensusAnalyserException {
-        return  CvsLoaderFactory.loadCensusData(country,filePath);
+    public Map loadCensusData(CvsLoaderFactory.Country country, String... filePath) throws CensusAnalyserException {
+        CensusAdaptor censusAdaptor = CvsLoaderFactory.createAdaptor(country);
+        return censusAdaptor.loadCensusData(filePath);
     }
 
     public String getStateWithSortByParameter(SortParameter.Parameter parameter) throws CensusAnalyserException {

@@ -86,6 +86,19 @@ public class IndiaAdaptorTest {
         }
     }
 
+    @Test
+    public void givenData_whenReverseSortedByAreaUsingInterface_ShouldReturnSortedoutput() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            censusAnalyser.loadCensusData(CvsLoaderFactory.Country.INDIA,INDIA_CENSUS_CSV_FILE_PATH,STATE_CODE_CSV);
+            ISortBy iSortBy = new SortByArea();
+            String sortedCensusData = censusAnalyser.getStateWithSortByParameter(iSortBy);
+            IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
+            Assert.assertEquals("Rajasthan", CsvDataList[0].state);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        }
+    }
 
 
 }

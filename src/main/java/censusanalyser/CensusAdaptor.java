@@ -17,7 +17,7 @@ public abstract class CensusAdaptor{
 
 
 
-    public  abstract Map<String, CensusDAO> loadCensusData(CensusAnalyser.Country country, String... filepath) throws CensusAnalyserException;
+    public  abstract Map<String, CensusDAO> loadCensusData(String... filepath) throws CensusAnalyserException;
 
     public <E> Map loadCensusData(Class<E> className, String... filePath) throws CensusAnalyserException {
         Map<String, CensusDAO> censusMap = new HashMap<>();
