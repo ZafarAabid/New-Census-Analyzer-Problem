@@ -86,7 +86,7 @@ public class USAdapterTest {
             IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
             System.out.println(CsvDataList[0].state + "___" + CsvDataList[0].densityPerSqKm);
 
-            Assert.assertEquals("Alaska", CsvDataList[0].state);
+            Assert.assertEquals("Alaska", CsvDataList[0].state.trim());
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
@@ -100,25 +100,27 @@ public class USAdapterTest {
             ISortBy iSortBy = new SortByDensity();
             String sortedCensusData = censusAnalyser.getStateWithSortByParameter(iSortBy);
             IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
-            Assert.assertEquals("District of Columbia", CsvDataList[0].state);
+            Assert.assertEquals("District of Columbia", CsvDataList[0].state.trim());
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
     }
 
+
     @Test
     public void givenData_whenReverseSortedByPopulationWithDensity_ShouldReturnSortedoutput() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser(CensusAnalyser.Country.US);
-            censusAnalyser.loadCensusData(CvsLoaderFactory.Country.US, US_STATE_CODE_CSV);
-            ISortBy iSortBy = new SortByDensity();
-            String sortedCensusData = censusAnalyser.getStateWithSortByParameter(iSortBy);
+            censusAnalyser.loadCensusData(CvsLoaderFactory.Country.US,US_STATE_CODE_CSV);
+            String sortedCensusData = censusAnalyser.getStateWithDualSortByParameter();
             IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
-            Assert.assertEquals("District of Columbia", CsvDataList[0].state);
+            Assert.assertEquals("California", CsvDataList[0].state.trim());
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
     }
+
+
 
 
 }

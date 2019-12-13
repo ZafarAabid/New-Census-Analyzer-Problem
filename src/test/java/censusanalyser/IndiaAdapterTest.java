@@ -1,10 +1,7 @@
 package censusanalyser;
 
 import censusanalyser.*;
-import censusanalyser.sortby.ISortBy;
-import censusanalyser.sortby.SortByArea;
-import censusanalyser.sortby.SortByState;
-import censusanalyser.sortby.SortParameter;
+import censusanalyser.sortby.*;
 import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
@@ -100,6 +97,32 @@ public class IndiaAdapterTest {
             String sortedCensusData = censusAnalyser.getStateWithSortByParameter(iSortBy);
             IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
             Assert.assertEquals("Rajasthan", CsvDataList[0].state);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        }
+    }
+    @Test
+    public void givenData_whenReverseSortedByPopulationUsingInterface_ShouldReturnSortedoutput() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser(CensusAnalyser.Country.INDIA);
+            censusAnalyser.loadCensusData(CvsLoaderFactory.Country.INDIA, INDIA_CENSUS_CSV_FILE_PATH, STATE_CODE_CSV);
+            ISortBy iSortBy = new SortByPopulation();
+            String sortedCensusData = censusAnalyser.getStateWithSortByParameter(iSortBy);
+            IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
+            Assert.assertEquals("Uttar Pradesh", CsvDataList[0].state);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        }
+    }
+    @Test
+    public void givenData_whenReverseSortedByDensityUsingInterface_ShouldReturnSortedoutput() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser(CensusAnalyser.Country.INDIA);
+            censusAnalyser.loadCensusData(CvsLoaderFactory.Country.INDIA, INDIA_CENSUS_CSV_FILE_PATH, STATE_CODE_CSV);
+            ISortBy iSortBy = new SortByDensity();
+            String sortedCensusData = censusAnalyser.getStateWithSortByParameter(iSortBy);
+            IndiaCensusDTO[] CsvDataList = new Gson().fromJson(sortedCensusData, IndiaCensusDTO[].class);
+            Assert.assertEquals("Bihar", CsvDataList[0].state);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(e.type, CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
