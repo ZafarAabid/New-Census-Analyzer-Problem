@@ -8,6 +8,7 @@ public class SortByArea implements ISortBy {
 
     @Override
     public Comparator getComparator() {
-        return Comparator.<CensusDAO,Double>comparing(census -> census.totalArea,Comparator.reverseOrder());
+               Comparator comparator = Comparator.<CensusDAO,Double>comparing(census -> census.totalArea,Comparator.reverseOrder());
+        return comparator;
     }
 }
