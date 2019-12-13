@@ -34,5 +34,14 @@ public class CensusDAO {
         return null;
     }
 
-
+    @Override
+    public String toString() {
+        return "CensusDAO{" +
+                "state='" + state + '\'' +
+                ", stateCode='" + stateCode + '\'' +
+                ", population=" + population +
+                ", totalArea=" + totalArea +
+                ", populationDensity=" + populationDensity +
+                '}';
+    }
 }

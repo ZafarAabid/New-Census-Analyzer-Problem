@@ -13,7 +13,7 @@ public class USCensusCodeDTO {
     @CsvBindByName(column = "State Id")
     public String stateId;
     @CsvBindByName(column = "Population")
-    public int population;
+    public long population;
     @CsvBindByName(column = "Total area")
     public double totalArea;
     @CsvBindByName(column = "Population Density")
@@ -21,7 +21,7 @@ public class USCensusCodeDTO {
 
     public USCensusCodeDTO(String state, String stateCode, long population, double populationDensity, double totalArea) {
     this.state = state;
-    this.population = (int) population;
+    this.population = population;
     this.populationDensity = populationDensity;
     this.totalArea = totalArea ;
     this.stateId = stateCode;

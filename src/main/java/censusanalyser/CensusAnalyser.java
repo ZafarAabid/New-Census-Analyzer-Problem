@@ -1,6 +1,8 @@
 package censusanalyser;
 
 import censusanalyser.sortby.ISortBy;
+import censusanalyser.sortby.SortByDensity;
+import censusanalyser.sortby.SortByPopulation;
 import censusanalyser.sortby.SortParameter;
 import com.google.gson.Gson;
 
@@ -13,7 +15,7 @@ public class CensusAnalyser {
 
     public enum Country {INDIA, US}
 
-    Map<String, CensusDAO> censusMap =null;
+    Map<String, CensusDAO> censusMap = null;
 
     public CensusAnalyser(Country country) {
         this.country = country;
@@ -63,12 +65,31 @@ public class CensusAnalyser {
         return sortedData;
     }
 
-    private List sort(List<CensusDAO> censusDAOS, Comparator<CensusDAO> censusCSVComparator) {
+    public String getStateWithDualSortByParameter() throws CensusAnalyserException {
+        if (censusMap == null | censusMap.size() == 0) {
+            throw new CensusAnalyserException("Null file", CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        }
+        Comparator<CensusDAO> PopulationComparator = new SortByPopulation().getComparator();
+        Comparator<CensusDAO> DensityComparator = new SortByDensity().getComparator();
+
+        List<CensusDAO> censusDAOS = censusMap.values().stream().collect(Collectors.toList());
+        List<CensusDAO> sortedList= sort(censusDAOS, PopulationComparator, DensityComparator);
+        sortedList.forEach(System.out::println);
+        String sortedData = new Gson().toJson(sortedList);
+        return sortedData;
+    }
+
+    private List sort(List<CensusDAO> censusDAOS, Comparator<CensusDAO> populationComparater, Comparator<CensusDAO> densityComparater) {
         for (int i = 0; i < censusDAOS.size() - 1; i++) {
             for (int j = 0; j < censusDAOS.size() - i - 1; j++) {
                 CensusDAO censusCSV1 = censusDAOS.get(j);
                 CensusDAO censusCSV2 = censusDAOS.get(j + 1);
-                if (censusCSVComparator.compare(censusCSV1, censusCSV2) > 0) {
+                if (populationComparater.compare(censusCSV1, censusCSV2) == 0) {
+                    if (densityComparater.compare(censusCSV1, censusCSV2) > 0) {
+                        censusDAOS.set(j, censusCSV2);
+                        censusDAOS.set(j + 1, censusCSV1);
+                    }
+                } else if (populationComparater.compare(censusCSV1, censusCSV2) > 0) {
                     censusDAOS.set(j, censusCSV2);
                     censusDAOS.set(j + 1, censusCSV1);
                 }
