@@ -3,6 +3,8 @@ package censusanalyser;
 import com.opencsv.bean.CsvBindByName;
 
 public class IndiaCensusDTO {
+    public IndiaCensusDTO() {
+    }
 
     @CsvBindByName(column = "State", required = true)
     public String state;
@@ -15,6 +17,14 @@ public class IndiaCensusDTO {
 
     @CsvBindByName(column = "DensityPerSqKm", required = true)
     public int densityPerSqKm;
+
+    public IndiaCensusDTO(String state, long population, double populationDensity, double totalArea) {
+        this.state = state;
+        this.population= (int) population;
+        this.densityPerSqKm = (int) populationDensity;
+        this.areaInSqKm = (int) totalArea;
+
+    }
 
     @Override
     public String toString() {

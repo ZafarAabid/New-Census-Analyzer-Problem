@@ -16,14 +16,23 @@ public class CensusDAO {
         population = indiaCensusDAO.population;
     }
 
-    public CensusDAO(USCensusCodeDAO censusCodeDAO) {
+    public CensusDAO(USCensusCodeDTO censusCodeDAO) {
         state = censusCodeDAO.state;
         stateCode = censusCodeDAO.stateId;
         populationDensity = censusCodeDAO.populationDensity;
         totalArea = censusCodeDAO.totalArea;
+        this.population = censusCodeDAO.population;
     }
 
-
+    public Object getCensusDTO(CensusAnalyser.Country country){
+        if (country.equals(CensusAnalyser.Country.INDIA)){
+            return new IndiaCensusDTO(state,population,populationDensity,totalArea);
+        }
+        else if (country.equals(CensusAnalyser.Country.US)){
+            return new USCensusCodeDTO(state,stateCode,population,populationDensity,totalArea);
+        }
+        return null;
+    }
 
 
 }

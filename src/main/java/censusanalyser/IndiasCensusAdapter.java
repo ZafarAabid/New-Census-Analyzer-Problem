@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
-public class IndiasCensusAdaptor extends CensusAdaptor {
+public class IndiasCensusAdapter extends CensusAdapter {
     @Override
     public Map<String, CensusDAO> loadCensusData(String... filepath) throws CensusAnalyserException {
         Map<String, CensusDAO> censusDAOMap= new HashMap<>();

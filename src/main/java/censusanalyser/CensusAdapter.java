@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
-public abstract class CensusAdaptor{
+public abstract class CensusAdapter {
 
 
 
@@ -30,9 +30,9 @@ public abstract class CensusAdaptor{
                 StreamSupport.stream(csvIterable.spliterator(), false)
                         .map(IndiaCensusDTO.class::cast)
                         .forEach(IndiaCensusDTO -> censusMap.put(IndiaCensusDTO.state, new CensusDAO(IndiaCensusDTO)));
-            } else if (className.getName().equals("censusanalyser.USCensusCodeDAO")) {
+            } else if (className.getName().equals("censusanalyser.USCensusCodeDTO")) {
                 StreamSupport.stream(csvIterable.spliterator(), false)
-                        .map(USCensusCodeDAO.class::cast)
+                        .map(USCensusCodeDTO.class::cast)
                         .forEach(USCensusCodeDAO -> censusMap.put(USCensusCodeDAO.state, new CensusDAO(USCensusCodeDAO)));
             }
             return censusMap;

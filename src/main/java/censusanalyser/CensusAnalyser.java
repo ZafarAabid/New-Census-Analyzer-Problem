@@ -1,6 +1,7 @@
 package censusanalyser;
 
 import censusanalyser.sortby.ISortBy;
+import censusanalyser.sortby.SortParameter;
 import com.google.gson.Gson;
 
 import java.util.*;
@@ -8,25 +9,39 @@ import java.util.stream.Collectors;
 
 public class CensusAnalyser {
 
-     public enum Country {INDIA, US}
-    Map<String, CensusDAO> censusMap = null;
+    private Country country;
+
+    public enum Country {INDIA, US}
+
+    Map<String, CensusDAO> censusMap =null;
+
+    public CensusAnalyser(Country country) {
+        this.country = country;
+        censusMap = new HashMap<>();
+    }
+
     public CensusAnalyser() {
         this.censusMap = new HashMap<>();
     }
 
     public Map loadCensusData(CvsLoaderFactory.Country country, String... filePath) throws CensusAnalyserException {
-        CensusAdaptor censusAdaptor = CvsLoaderFactory.createAdaptor(country);
-        return censusAdaptor.loadCensusData(filePath);
+        CensusAdapter censusAdaptor = CvsLoaderFactory.createAdaptor(country);
+        censusMap = censusAdaptor.loadCensusData(filePath);
+        return censusMap;
     }
 
     public String getStateWithSortByParameter(SortParameter.Parameter parameter) throws CensusAnalyserException {
         if (censusMap == null | censusMap.size() == 0) {
             throw new CensusAnalyserException("Null file", CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
-
         Comparator<CensusDAO> censusCSVComparator = SortParameter.getParameter(parameter);
         List<CensusDAO> censusDAOS = censusMap.values().stream().collect(Collectors.toList());
-        censusDAOS = sort(censusDAOS, censusCSVComparator);
+        censusDAOS.sort(censusCSVComparator);
+        List<Object> censusDto = new ArrayList<>();
+        for (CensusDAO censusDAO : censusDAOS
+        ) {
+            censusDto.add(censusDAO.getCensusDTO(country));
+        }
         String sortedData = new Gson().toJson(censusDAOS);
         return sortedData;
     }
@@ -35,11 +50,16 @@ public class CensusAnalyser {
         if (censusMap == null | censusMap.size() == 0) {
             throw new CensusAnalyserException("Null file", CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
-
         Comparator<CensusDAO> censusCSVComparator = iSortBy.getComparator();
+
         List<CensusDAO> censusDAOS = censusMap.values().stream().collect(Collectors.toList());
-        censusDAOS = sort(censusDAOS, censusCSVComparator);
-        String sortedData = new Gson().toJson(censusDAOS);
+        censusDAOS.sort(censusCSVComparator);
+        List<Object> censusDto = new ArrayList<>();
+        for (CensusDAO censusDAO : censusDAOS
+        ) {
+            censusDto.add(censusDAO.getCensusDTO(country));
+        }
+        String sortedData = new Gson().toJson(censusDto);
         return sortedData;
     }
 

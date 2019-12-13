@@ -1,4 +1,6 @@
-package censusanalyser;
+package censusanalyser.sortby;
+
+import censusanalyser.CensusDAO;
 
 import java.util.Comparator;
 import java.util.HashMap;

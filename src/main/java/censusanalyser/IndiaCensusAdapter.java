@@ -8,30 +8,17 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
-public class IndiaCensusAdaptor extends CensusAdaptor {
+public class IndiaCensusAdapter extends CensusAdapter {
     Map<String, CensusDAO> censusMap = new HashMap<>();
-    Map<SortParameter, Comparator> sortParameterComparator = new HashMap<>();
 
-
-/*    public <E> Map load#CensusData(CensusAnalyser.Country country, String... filePath) throws CensusAnalyserException {
-        if (country.equals(CensusAnalyser.Country.INDIA))
-            censusMap = new IndiaCensusAdaptor().loadCensusData(IndiaCensusDTO.class, filePath);
-
-        else if (country.equals(CensusAnalyser.Country.INDIA))
-            censusMap = new IndiaCensusAdaptor().loadCensusData(IndiaCensusDTO.class, filePath);
-        else
-            throw new CensusAnalyserException("wrong country name is passed", CensusAnalyserException.ExceptionType.INVALID_COUNTRY);
-        return censusMap;
-    }*/
     @Override
-    public Map<String, CensusDAO> loadCensusData(String... filepath) {
-        return null;
+    public Map<String, CensusDAO> loadCensusData(String... filepath) throws CensusAnalyserException {
+        return loadCensusData(IndiaCensusDTO.class,filepath);
     }
 
         public <E> Map loadCensusData(Class<E> className, String... filePath) throws CensusAnalyserException {
@@ -47,7 +34,7 @@ public class IndiaCensusAdaptor extends CensusAdaptor {
                 censusMap = loadIndiaStateCode(filePath[1]);
             } else if (className.getName().equals("censusanalyser.USCensusCodeDAO")) {
                 StreamSupport.stream(csvIterable.spliterator(), false)
-                        .map(USCensusCodeDAO.class::cast)
+                        .map(USCensusCodeDTO.class::cast)
                         .forEach(USCensusCodeDAO -> censusMap.put(USCensusCodeDAO.state, new CensusDAO(USCensusCodeDAO)));
             }
             return censusMap;

@@ -2,8 +2,11 @@ package censusanalyser;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class USCensusCodeDAO {
+public class USCensusCodeDTO {
 // State Id,State,Population,Housing units,Total area,Water area,Land area,Population Density,Housing Density
+
+    public USCensusCodeDTO() {
+    }
 
     @CsvBindByName(column = "State")
     public String state;
@@ -16,4 +19,11 @@ public class USCensusCodeDAO {
     @CsvBindByName(column = "Population Density")
     public double populationDensity;
 
+    public USCensusCodeDTO(String state, String stateCode, long population, double populationDensity, double totalArea) {
+    this.state = state;
+    this.population = (int) population;
+    this.populationDensity = populationDensity;
+    this.totalArea = totalArea ;
+    this.stateId = stateCode;
+    }
 }

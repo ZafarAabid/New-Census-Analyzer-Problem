@@ -4,22 +4,22 @@ public class CvsLoaderFactory {
 
     public enum Country {
         INDIA {
-            public CensusAdaptor create() {
-                return new IndiaCensusAdaptor();
+            public CensusAdapter create() {
+                return new IndiaCensusAdapter();
             }
         },
         US {
-            public CensusAdaptor create() {
-                return new USCensusAdaptor();
+            public CensusAdapter create() {
+                return new USCensusAdapter();
             }
         };
 
-        public CensusAdaptor create() {
+        public CensusAdapter create() {
             return null;
         }
     }
 
-    public static  CensusAdaptor createAdaptor(Country validatorType) {
+    public static CensusAdapter createAdaptor(Country validatorType) {
         return validatorType.create();
     }
 }
