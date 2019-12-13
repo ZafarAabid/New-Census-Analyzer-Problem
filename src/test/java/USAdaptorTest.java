@@ -9,7 +9,7 @@ public class USAdaptorTest {
     @Test
     public void givenData_WhenCensusDataPassesOnlyOneCSVFile_ThrowException() {
         try {
-            Map<String, CensusDAO> indiaCensusData = new USCensusAdaptor().loadCensusData(CensusAnalyser.Country.US,US_STATE_CODE_CSV);
+            Map<String, CensusDAO> indiaCensusData = new USCensusAdaptor().loadCensusData(US_STATE_CODE_CSV);
             Assert.assertEquals(51, indiaCensusData.size());
         }catch (CensusAnalyserException e){
 
